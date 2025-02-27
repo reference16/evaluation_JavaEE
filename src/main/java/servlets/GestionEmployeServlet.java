@@ -79,6 +79,8 @@ public class GestionEmployeServlet extends HttpServlet {
                 String prenom = request.getParameter("prenom");
                 String fonction = request.getParameter("fonction");
                 String service = request.getParameter("service");
+                String sexe = request.getParameter("sexe");
+                double salaireBase = Double.parseDouble(request.getParameter("salaireBase"));
                 Date dateEmbauche = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dateEmbauche"));
                 
                 String entrepriseIdStr = request.getParameter("entrepriseId");
@@ -88,8 +90,7 @@ public class GestionEmployeServlet extends HttpServlet {
                     entreprise = EntrepriseDAO.getEntrepriseById(entrepriseId);
                 }
 
-                Employe employe = new Employe(0, matricule, nom, prenom, fonction, service, dateEmbauche);
-                employe.setEntreprise(entreprise);
+                Employe employe = new Employe(0, matricule, nom, prenom, fonction, service, dateEmbauche, sexe, salaireBase, entreprise);
 
                 if (EmployeDAO.addEmploye(employe)) {
                     successMessage = "Employé ajouté avec succès";
@@ -112,8 +113,7 @@ public class GestionEmployeServlet extends HttpServlet {
                     entreprise = EntrepriseDAO.getEntrepriseById(entrepriseId);
                 }
 
-                Employe employe = new Employe(id, matricule, nom, prenom, fonction, service, dateEmbauche);
-                employe.setEntreprise(entreprise);
+                Employe employe = new Employe(id, matricule, nom, prenom, fonction, service, dateEmbauche, request.getParameter("sexe"), Double.parseDouble(request.getParameter("salaireBase")), entreprise);
 
                 if (EmployeDAO.updateEmploye(employe)) {
                     successMessage = "Employé mis à jour avec succès";

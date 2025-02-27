@@ -10,17 +10,8 @@ import models.Employe;
 import utils.DatabaseConnection;
 import org.mindrot.jbcrypt.BCrypt;
 
-/**
- * Classe DAO pour la gestion des utilisateurs.
- */
 public class UserDAO {
     
-    /**
-     * Authentifie un utilisateur avec son email et mot de passe.
-     * @param email L'email de l'utilisateur
-     * @param password Le mot de passe en clair
-     * @return User l'utilisateur authentifié ou null si échec
-     */
     public static User authenticateUser(String email, String password) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -64,11 +55,6 @@ public class UserDAO {
         }
     }
 
-    /**
-     * Enregistre un nouvel utilisateur dans la base de données.
-     * @param user L'utilisateur à enregistrer
-     * @return boolean true si l'enregistrement a réussi, false sinon
-     */
     public static boolean registerUser(User user) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -105,11 +91,6 @@ public class UserDAO {
         }
     }
 
-    /**
-     * Récupère un utilisateur par son ID.
-     * @param userId L'ID de l'utilisateur
-     * @return User l'utilisateur trouvé ou null si non trouvé
-     */
     public static User getUserById(int userId) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -141,76 +122,6 @@ public class UserDAO {
         } finally {
             try {
                 if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (conn != null) DatabaseConnection.closeConnection(conn);
-            } catch (SQLException e) {
-                System.err.println("Erreur lors de la fermeture des ressources : " + e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Met à jour un utilisateur.
-     * @param user L'utilisateur à mettre à jour
-     * @return boolean true si la mise à jour a réussi, false sinon
-     */
-    public static boolean updateUser(User user) {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        
-        String query = "UPDATE user SET email = ?, role = ?, id_emp = ? WHERE id_user = ?";
-
-        try {
-            conn = DatabaseConnection.getConnection();
-            stmt = conn.prepareStatement(query);
-
-            stmt.setString(1, user.getEmail());
-            stmt.setString(2, user.getRole());
-
-            if (user.getEmploye() != null) {
-                stmt.setInt(3, user.getEmploye().getId());
-            } else {
-                stmt.setNull(3, java.sql.Types.INTEGER);
-            }
-
-            stmt.setInt(4, user.getId());
-
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la mise à jour: " + e.getMessage());
-            return false;
-        } finally {
-            try {
-                if (stmt != null) stmt.close();
-                if (conn != null) DatabaseConnection.closeConnection(conn);
-            } catch (SQLException e) {
-                System.err.println("Erreur lors de la fermeture des ressources : " + e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Supprime un utilisateur de la base de données.
-     * @param userId L'ID de l'utilisateur à supprimer
-     * @return boolean true si la suppression a réussi, false sinon
-     */
-    public static boolean deleteUser(int userId) {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        
-        String query = "DELETE FROM user WHERE id_user = ?";
-
-        try {
-            conn = DatabaseConnection.getConnection();
-            stmt = conn.prepareStatement(query);
-
-            stmt.setInt(1, userId);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la suppression de l'utilisateur: " + e.getMessage());
-            return false;
-        } finally {
-            try {
                 if (stmt != null) stmt.close();
                 if (conn != null) DatabaseConnection.closeConnection(conn);
             } catch (SQLException e) {

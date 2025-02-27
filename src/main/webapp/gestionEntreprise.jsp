@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="navbar.jsp" %>
 <%@ page import="models.Entreprise" %>
+<%@ page import="models.Employe" %>
 <%@ page import="dao.EntrepriseDAO" %>
+<%@ page import="dao.EmployeDAO" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="fr">
@@ -24,29 +26,35 @@
                         <th class="py-2 px-4">Adresse</th>
                         <th class="py-2 px-4">Chiffre d'affaire</th>
                         <th class="py-2 px-4">Date de création</th>
+                        <th class="py-2 px-4">Employés</th>
                         <th class="py-2 px-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                        List<Entreprise> entreprises;
-                        // Essayer d'abord de récupérer depuis l'attribut de la requête
-                        if (request.getAttribute("entreprises") != null) {
-                            entreprises = (List<Entreprise>) request.getAttribute("entreprises");
-                        } else {
-                            // Si non disponible, rediriger vers le servlet
-                            response.sendRedirect("GestionEntrepriseServlet");
-                            return;
-                        }
-                        
-                        if (entreprises != null) {
+                        List<Entreprise> entreprises = EntrepriseDAO.getAllEntreprises();
+                        if (entreprises != null && !entreprises.isEmpty()) {
                             for (Entreprise entreprise : entreprises) {
+                                List<Employe> employesEntreprise = EmployeDAO.getEmployesByEntreprise(entreprise.getId());
                     %>
                     <tr class="hover:bg-gray-600">
                         <td class="py-2 px-4"><%= entreprise.getNom() %></td>
                         <td class="py-2 px-4"><%= entreprise.getAdresse() %></td>
                         <td class="py-2 px-4"><%= String.format("%,.2f €", entreprise.getChiffreAffaire()) %></td>
                         <td class="py-2 px-4"><%= entreprise.getDateCreation() %></td>
+                        <td class="py-2 px-4">
+                            <% if (employesEntreprise != null && !employesEntreprise.isEmpty()) { %>
+                                <div class="max-h-32 overflow-y-auto">
+                                    <% for (Employe emp : employesEntreprise) { %>
+                                        <div class="text-sm py-1">
+                                            <%= emp.getNom() %> <%= emp.getPrenom() %> - <%= emp.getFonction() %>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            <% } else { %>
+                                <span class="text-gray-400">Aucun employé</span>
+                            <% } %>
+                        </td>
                         <td class="py-2 px-4">
                             <div class="flex space-x-2">
                                 <form action="GestionEntrepriseServlet" method="post" class="inline">

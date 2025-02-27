@@ -41,66 +41,72 @@
             </div>
 
             <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden">
-                <table class="min-w-full">
-                    <thead class="bg-gray-700">
-                        <tr>
-                            <th class="py-3 px-4 text-left">Matricule</th>
-                            <th class="py-3 px-4 text-left">Nom</th>
-                            <th class="py-3 px-4 text-left">Prénom</th>
-                            <th class="py-3 px-4 text-left">Fonction</th>
-                            <th class="py-3 px-4 text-left">Service</th>
-                            <th class="py-3 px-4 text-left">Date d'embauche</th>
-                            <th class="py-3 px-4 text-left">Entreprise</th>
-                            <th class="py-3 px-4 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-700">
-                        <% 
-                            List<Employe> employes = (List<Employe>) request.getAttribute("employes");
-                            if (employes != null && !employes.isEmpty()) {
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                                for (Employe employe : employes) {
-                        %>
-                        <tr class="hover:bg-gray-700 transition duration-200">
-                            <td class="py-3 px-4"><%= employe.getMatricule() %></td>
-                            <td class="py-3 px-4"><%= employe.getNom() %></td>
-                            <td class="py-3 px-4"><%= employe.getPrenom() %></td>
-                            <td class="py-3 px-4"><%= employe.getFonction() %></td>
-                            <td class="py-3 px-4"><%= employe.getService() %></td>
-                            <td class="py-3 px-4"><%= dateFormat.format(employe.getDateEmbauche()) %></td>
-                            <td class="py-3 px-4">
-                                <%= employe.getEntreprise() != null ? employe.getEntreprise().getNom() : "Non assigné" %>
-                            </td>
-                            <td class="py-3 px-4">
-                                <div class="flex justify-center space-x-2">
-                                    <a href="GestionEmployeServlet?action=update&id=<%= employe.getId() %>" 
-                                       class="bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-1 rounded transition duration-200">
-                                        Modifier
-                                    </a>
-                                    <form action="GestionEmployeServlet" method="post" class="inline" 
-                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?');">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="id" value="<%= employe.getId() %>">
-                                        <button type="submit" 
-                                                class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded transition duration-200">
-                                            Supprimer
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        <% 
-                                }
-                            } else {
-                        %>
-                        <tr>
-                            <td colspan="8" class="py-4 px-4 text-center text-gray-400">
-                                Aucun employé trouvé
-                            </td>
-                        </tr>
-                        <% } %>
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-700">
+                            <tr>
+                                <th class="py-3 px-4 text-left">Matricule</th>
+                                <th class="py-3 px-4 text-left">Nom</th>
+                                <th class="py-3 px-4 text-left">Prénom</th>
+                                <th class="py-3 px-4 text-left">Sexe</th>
+                                <th class="py-3 px-4 text-left">Fonction</th>
+                                <th class="py-3 px-4 text-left">Service</th>
+                                <th class="py-3 px-4 text-left">Salaire</th>
+                                <th class="py-3 px-4 text-left">Date d'embauche</th>
+                                <th class="py-3 px-4 text-left">Entreprise</th>
+                                <th class="py-3 px-4 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700">
+                            <% 
+                                List<Employe> employes = (List<Employe>) request.getAttribute("employes");
+                                if (employes != null && !employes.isEmpty()) {
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                    for (Employe employe : employes) {
+                            %>
+                            <tr class="hover:bg-gray-700 transition duration-200">
+                                <td class="py-3 px-4"><%= employe.getMatricule() %></td>
+                                <td class="py-3 px-4"><%= employe.getNom() %></td>
+                                <td class="py-3 px-4"><%= employe.getPrenom() %></td>
+                                <td class="py-3 px-4"><%= employe.getSexe() %></td>
+                                <td class="py-3 px-4"><%= employe.getFonction() %></td>
+                                <td class="py-3 px-4"><%= employe.getService() %></td>
+                                <td class="py-3 px-4"><%= String.format("%.2f €", employe.getSalaireBase()) %></td>
+                                <td class="py-3 px-4"><%= dateFormat.format(employe.getDateEmbauche()) %></td>
+                                <td class="py-3 px-4">
+                                    <%= employe.getEntreprise() != null ? employe.getEntreprise().getNom() : "Non assigné" %>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div class="flex justify-center space-x-2">
+                                        <a href="GestionEmployeServlet?action=update&id=<%= employe.getId() %>" 
+                                           class="bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-1 rounded transition duration-200">
+                                            Modifier
+                                        </a>
+                                        <form action="GestionEmployeServlet" method="post" class="inline" 
+                                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?');">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="id" value="<%= employe.getId() %>">
+                                            <button type="submit" 
+                                                    class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded transition duration-200">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% 
+                                    }
+                                } else {
+                            %>
+                            <tr>
+                                <td colspan="10" class="py-4 px-4 text-center text-gray-400">
+                                    Aucun employé trouvé
+                                </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         <% } else { %>
             <div class="bg-red-500 text-white p-4 rounded">

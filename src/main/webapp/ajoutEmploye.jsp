@@ -41,6 +41,16 @@
                 </div>
 
                 <div>
+                    <label for="sexe" class="block text-lg mb-2">Sexe:</label>
+                    <select name="sexe" id="sexe" 
+                            class="w-full p-2 bg-gray-700 text-white rounded" 
+                            required>
+                        <option value="M">Masculin</option>
+                        <option value="F">Féminin</option>
+                    </select>
+                </div>
+
+                <div>
                     <label for="fonction" class="block text-lg mb-2">Fonction:</label>
                     <input type="text" name="fonction" id="fonction" 
                            class="w-full p-2 bg-gray-700 text-white rounded" 
@@ -51,6 +61,14 @@
                     <label for="service" class="block text-lg mb-2">Service:</label>
                     <input type="text" name="service" id="service" 
                            class="w-full p-2 bg-gray-700 text-white rounded" 
+                           required>
+                </div>
+
+                <div>
+                    <label for="salaireBase" class="block text-lg mb-2">Salaire de base:</label>
+                    <input type="number" name="salaireBase" id="salaireBase" 
+                           class="w-full p-2 bg-gray-700 text-white rounded" 
+                           step="0.01" min="0" 
                            required>
                 </div>
 
